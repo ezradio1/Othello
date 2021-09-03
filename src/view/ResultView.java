@@ -1,0 +1,424 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package view;
+
+import java.awt.Color;
+import java.io.IOException;
+import java.text.DecimalFormat;
+import java.util.stream.Collectors;
+import rollthedice.Game;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.DefaultCategoryDataset;
+import rollthedice.RollTheDice;
+
+/**
+ *
+ * @author Ezra Audivano Dirfa
+ */
+public class ResultView extends javax.swing.JFrame {
+
+    /**
+     * Creates new form GameView
+     */
+    String inputString = "";
+    int total, round = 0, counter = 0;
+    int[] totalPerRoll;
+    Map<Integer, Integer> mode = new HashMap<Integer, Integer>();
+    Game[] game;
+    DecimalFormat df;
+
+    public ResultView(int[] totalPerRoll, Map<Integer, Integer> mode, Game[] game, int total) {
+        initComponents();
+        this.totalPerRoll = totalPerRoll;
+        this.mode = mode;
+        this.game = game;
+        this.total = total;
+        setResizable(false);
+        this.setSize(800, 600);
+        df = new DecimalFormat("#.##");
+        showResultGame();
+        this.setTitle("Roll The Dice - Develop by Ezra Audivano");
+
+    }
+
+    public String getModus() {
+        int max = Collections.max(mode.values());
+        String temp = "";
+        Map<Integer, Integer> modusTemp = mode.entrySet().stream().filter(x -> x.getValue() == max)
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        // menampilkan modus jika lebih dari 1
+        for (Entry<Integer, Integer> item : modusTemp.entrySet()) {
+            counter++;
+            if (counter == modusTemp.size() && counter != 1) {
+                temp += "and ";
+            }
+            temp += item.getKey();
+            if (counter < modusTemp.size()) {
+                temp += ", ";
+            }
+
+        }
+        return temp;
+    }
+
+    public void getChartOne() {
+        DefaultCategoryDataset dcd = new DefaultCategoryDataset();
+        for (int i = 0; i < 12; i++) {
+            dcd.setValue(totalPerRoll[i], "Point", Integer.toString(i + 1));
+        }
+
+        JFreeChart jchart = ChartFactory.createBarChart("Total Point per Throw", "Throw", "Point", dcd, PlotOrientation.VERTICAL, true, true, false);
+        CategoryPlot plot = jchart.getCategoryPlot();
+        plot.setRangeGridlinePaint(Color.BLACK);
+
+        ChartPanel chartPanel = new ChartPanel(jchart);
+        jPanelReport.removeAll();
+        jPanelReport.add(chartPanel);
+        jPanelReport.updateUI();
+        RollTheDice.tampilGrafikTotalPoin(totalPerRoll);
+
+    }
+
+    public void getChartTwo() {
+        DefaultCategoryDataset dcd = new DefaultCategoryDataset();
+
+        for (Entry<Integer, Integer> item : mode.entrySet()) {
+            if (item.getValue() != 0) {
+                dcd.setValue(item.getValue(), "Die", item.getKey());
+            }
+        }
+
+        JFreeChart jchart = ChartFactory.createBarChart("Total Number of Out Each Dice", "Die", "Amount", dcd, PlotOrientation.VERTICAL, true, true, false);
+        CategoryPlot plot = jchart.getCategoryPlot();
+        plot.setRangeGridlinePaint(Color.BLACK);
+
+        ChartPanel chartPanel = new ChartPanel(jchart);
+        jPanelReport1.removeAll();
+        jPanelReport1.add(chartPanel);
+        jPanelReport1.updateUI();
+        RollTheDice.tampilGrafikMataDadu(mode);
+
+    }
+
+    public void getTable() {
+        for (int i = 0; i < 12; i++) {
+            jTablePerLemparan.setValueAt(i + 1, i, 0);
+            jTablePerLemparan.setValueAt(game[i].getResultFirstDice(), i, 1);
+            jTablePerLemparan.setValueAt(game[i].getResultSecondDice(), i, 2);
+            jTablePerLemparan.setValueAt(game[i].getTotalValue(), i, 3);
+        }
+
+    }
+
+    public void showResultGame() {
+        float rata = total / 12f;
+        String printValueRata = df.format(rata);
+        int max = Collections.max(mode.values());
+
+        jLabelTotalValue.setText(Integer.toString(total));
+        jLabelRataValue.setText(printValueRata);
+        jLabelModusValue.setText(getModus());
+        jLabelMunculValue.setText(Integer.toString(max) + " times");
+
+        RollTheDice.getDetailHasil(mode, game);
+        RollTheDice.getTabelDaftarPoin(game);
+
+        getChartOne();
+        getChartTwo();
+        getTable();
+
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jPanelResult = new javax.swing.JPanel();
+        jLabelResult = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTablePerLemparan = new javax.swing.JTable();
+        jLabelTotalValue = new javax.swing.JLabel();
+        jLabelTitikDuaSkor = new javax.swing.JLabel();
+        jLabelTitikDuaModus = new javax.swing.JLabel();
+        jLabelRataValue = new javax.swing.JLabel();
+        jLabelModus = new javax.swing.JLabel();
+        jLabelTotal = new javax.swing.JLabel();
+        jLabelModusValue = new javax.swing.JLabel();
+        jLabelMuncul = new javax.swing.JLabel();
+        jLabelTitikDuaJmlMuncul = new javax.swing.JLabel();
+        jLabelMunculValue = new javax.swing.JLabel();
+        jLabelTitikDuaRata = new javax.swing.JLabel();
+        jLabelRata = new javax.swing.JLabel();
+        jPanelReport1 = new javax.swing.JPanel();
+        jPanelReport = new javax.swing.JPanel();
+        jButtonRestart = new javax.swing.JButton();
+        jLabelBg1 = new javax.swing.JLabel();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jPanelResult.setPreferredSize(new java.awt.Dimension(800, 600));
+        jPanelResult.setLayout(null);
+
+        jLabelResult.setFont(new java.awt.Font("Gill Sans MT", 1, 48)); // NOI18N
+        jLabelResult.setForeground(new java.awt.Color(255, 255, 255));
+        jLabelResult.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabelResult.setText("RESULT");
+        jPanelResult.add(jLabelResult);
+        jLabelResult.setBounds(0, 20, 800, 50);
+
+        jTablePerLemparan.setFont(new java.awt.Font("Yu Gothic UI", 0, 12)); // NOI18N
+        jTablePerLemparan.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Throw", "Dice-1", "Dice-2", "Total"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(jTablePerLemparan);
+        if (jTablePerLemparan.getColumnModel().getColumnCount() > 0) {
+            jTablePerLemparan.getColumnModel().getColumn(0).setResizable(false);
+            jTablePerLemparan.getColumnModel().getColumn(1).setResizable(false);
+            jTablePerLemparan.getColumnModel().getColumn(2).setResizable(false);
+            jTablePerLemparan.getColumnModel().getColumn(3).setResizable(false);
+        }
+
+        jPanelResult.add(jScrollPane1);
+        jScrollPane1.setBounds(400, 320, 370, 220);
+
+        jLabelTotalValue.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 18)); // NOI18N
+        jLabelTotalValue.setForeground(new java.awt.Color(255, 255, 255));
+        jLabelTotalValue.setText("0");
+        jPanelResult.add(jLabelTotalValue);
+        jLabelTotalValue.setBounds(180, 330, 120, 30);
+
+        jLabelTitikDuaSkor.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 18)); // NOI18N
+        jLabelTitikDuaSkor.setForeground(new java.awt.Color(255, 255, 255));
+        jLabelTitikDuaSkor.setText(":");
+        jPanelResult.add(jLabelTitikDuaSkor);
+        jLabelTitikDuaSkor.setBounds(160, 330, 40, 30);
+
+        jLabelTitikDuaModus.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 18)); // NOI18N
+        jLabelTitikDuaModus.setForeground(new java.awt.Color(255, 255, 255));
+        jLabelTitikDuaModus.setText(":");
+        jPanelResult.add(jLabelTitikDuaModus);
+        jLabelTitikDuaModus.setBounds(160, 390, 40, 30);
+
+        jLabelRataValue.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 18)); // NOI18N
+        jLabelRataValue.setForeground(new java.awt.Color(255, 255, 255));
+        jLabelRataValue.setText("Rata - rata");
+        jPanelResult.add(jLabelRataValue);
+        jLabelRataValue.setBounds(180, 360, 130, 30);
+
+        jLabelModus.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 18)); // NOI18N
+        jLabelModus.setForeground(new java.awt.Color(255, 255, 255));
+        jLabelModus.setText("Mode");
+        jPanelResult.add(jLabelModus);
+        jLabelModus.setBounds(30, 390, 130, 30);
+
+        jLabelTotal.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 18)); // NOI18N
+        jLabelTotal.setForeground(new java.awt.Color(255, 255, 255));
+        jLabelTotal.setText("Total");
+        jPanelResult.add(jLabelTotal);
+        jLabelTotal.setBounds(30, 330, 130, 30);
+
+        jLabelModusValue.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 18)); // NOI18N
+        jLabelModusValue.setForeground(new java.awt.Color(255, 255, 255));
+        jLabelModusValue.setText("Modus");
+        jPanelResult.add(jLabelModusValue);
+        jLabelModusValue.setBounds(180, 390, 200, 30);
+
+        jLabelMuncul.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 18)); // NOI18N
+        jLabelMuncul.setForeground(new java.awt.Color(255, 255, 255));
+        jLabelMuncul.setText("Appeared");
+        jPanelResult.add(jLabelMuncul);
+        jLabelMuncul.setBounds(30, 420, 81, 30);
+
+        jLabelTitikDuaJmlMuncul.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 18)); // NOI18N
+        jLabelTitikDuaJmlMuncul.setForeground(new java.awt.Color(255, 255, 255));
+        jLabelTitikDuaJmlMuncul.setText(":");
+        jPanelResult.add(jLabelTitikDuaJmlMuncul);
+        jLabelTitikDuaJmlMuncul.setBounds(160, 420, 40, 30);
+
+        jLabelMunculValue.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 18)); // NOI18N
+        jLabelMunculValue.setForeground(new java.awt.Color(255, 255, 255));
+        jLabelMunculValue.setText("Jumlah Muncul");
+        jPanelResult.add(jLabelMunculValue);
+        jLabelMunculValue.setBounds(180, 420, 160, 30);
+
+        jLabelTitikDuaRata.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 18)); // NOI18N
+        jLabelTitikDuaRata.setForeground(new java.awt.Color(255, 255, 255));
+        jLabelTitikDuaRata.setText(":");
+        jPanelResult.add(jLabelTitikDuaRata);
+        jLabelTitikDuaRata.setBounds(160, 360, 40, 30);
+
+        jLabelRata.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 18)); // NOI18N
+        jLabelRata.setForeground(new java.awt.Color(255, 255, 255));
+        jLabelRata.setText("Average");
+        jPanelResult.add(jLabelRata);
+        jLabelRata.setBounds(30, 360, 130, 30);
+
+        jPanelReport1.setLayout(new javax.swing.BoxLayout(jPanelReport1, javax.swing.BoxLayout.LINE_AXIS));
+        jPanelResult.add(jPanelReport1);
+        jPanelReport1.setBounds(400, 90, 370, 220);
+
+        jPanelReport.setLayout(new javax.swing.BoxLayout(jPanelReport, javax.swing.BoxLayout.LINE_AXIS));
+        jPanelResult.add(jPanelReport);
+        jPanelReport.setBounds(20, 90, 370, 220);
+
+        jButtonRestart.setBackground(new java.awt.Color(255, 0, 51));
+        jButtonRestart.setFont(new java.awt.Font("Segoe UI Black", 0, 24)); // NOI18N
+        jButtonRestart.setForeground(new java.awt.Color(255, 255, 255));
+        jButtonRestart.setText("Restart");
+        jButtonRestart.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonRestartActionPerformed(evt);
+            }
+        });
+        jPanelResult.add(jButtonRestart);
+        jButtonRestart.setBounds(30, 490, 140, 50);
+
+        jLabelBg1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/image/bg-1.png"))); // NOI18N
+        jLabelBg1.setPreferredSize(new java.awt.Dimension(800, 600));
+        jPanelResult.add(jLabelBg1);
+        jLabelBg1.setBounds(0, -340, 800, 1270);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jPanelResult, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jPanelResult, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+
+        pack();
+        setLocationRelativeTo(null);
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void jButtonRestartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRestartActionPerformed
+        // TODO add your handling code here:
+        this.setVisible(false);
+
+        try {
+            GameView gv = new GameView();
+            gv.setVisible(true);
+        } catch (IOException ex) {
+            Logger.getLogger(ResultView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }//GEN-LAST:event_jButtonRestartActionPerformed
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(ResultView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(ResultView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(ResultView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(ResultView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+//                new ResultView().setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButtonRestart;
+    private javax.swing.JLabel jLabelBg1;
+    private javax.swing.JLabel jLabelModus;
+    private javax.swing.JLabel jLabelModusValue;
+    private javax.swing.JLabel jLabelMuncul;
+    private javax.swing.JLabel jLabelMunculValue;
+    private javax.swing.JLabel jLabelRata;
+    private javax.swing.JLabel jLabelRataValue;
+    private javax.swing.JLabel jLabelResult;
+    private javax.swing.JLabel jLabelTitikDuaJmlMuncul;
+    private javax.swing.JLabel jLabelTitikDuaModus;
+    private javax.swing.JLabel jLabelTitikDuaRata;
+    private javax.swing.JLabel jLabelTitikDuaSkor;
+    private javax.swing.JLabel jLabelTotal;
+    private javax.swing.JLabel jLabelTotalValue;
+    private javax.swing.JPanel jPanelReport;
+    private javax.swing.JPanel jPanelReport1;
+    private javax.swing.JPanel jPanelResult;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTablePerLemparan;
+    // End of variables declaration//GEN-END:variables
+}
